@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shakespeare Text Generation — Pipeline Infographic</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #e8e8f0;
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
+  .container { max-width: 1200px; margin: 0 auto; }
+  header {
+    text-align: center;
+    padding: 30px 20px;
+    border-bottom: 3px solid #e94560;
+    margin-bottom: 40px;
+  }
+  h1 {
+    font-size: 2.6em;
+    color: #fff;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 10px rgba(233, 69, 96, 0.5);
+  }
+  h1 .accent { color: #e94560; }
+  .subtitle { color: #a0a0c0; margin-top: 10px; font-size: 1.1em; font-style: italic; }
+
+  .section {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(233, 69, 96, 0.3);
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 30px;
+    backdrop-filter: blur(10px);
+  }
+  h2 {
+    font-size: 1.6em;
+    color: #e94560;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(233, 69, 96, 0.3);
+    letter-spacing: 1px;
+  }
+
+  /* Pipeline flow */
+  .pipeline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+  }
+  .step {
+    background: linear-gradient(145deg, #0f3460, #16213e);
+    border-left: 4px solid #e94560;
+    padding: 18px;
+    border-radius: 10px;
+    transition: transform 0.3s;
+    position: relative;
+  }
+  .step:hover { transform: translateY(-4px); }
+  .step-num {
+    display: inline-block;
+    background: #e94560;
+    color: #fff;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .step h3 { color: #fff; font-size: 1.05em; margin-bottom: 6px; }
+  .step p { color: #b0b0d0; font-size: 0.88em; line-height: 1.4; }
+
+  /* Tools grid */
+  .tools {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+  }
+  .tool-card {
+    background: linear-gradient(145deg, #16213e, #0f3460);
+    padding: 20px;
+    border-radius: 12px;
+    border-top: 4px solid #00d9ff;
+  }
+  .tool-card h3 { color: #00d9ff; font-size: 1.15em; margin-bottom: 8px; }
+  .tool-card code {
+    display: block;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-family: 'Consolas', monospace;
+    color: #fcd34d;
+    font-size: 0.82em;
+    margin: 8px 0;
+    word-break: break-all;
+  }
+  .tool-card p { color: #c0c0d8; font-size: 0.9em; line-height: 1.45; }
+
+  /* Model architecture */
+  .architecture {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .layer {
+    padding: 14px 20px;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  .layer .desc { font-weight: 300; font-size: 0.85em; opacity: 0.85; }
+  .l1 { background: linear-gradient(90deg, #667eea, #764ba2); }
+  .l2 { background: linear-gradient(90deg, #f093fb, #f5576c); }
+  .l3 { background: linear-gradient(90deg, #4facfe, #00f2fe); }
+  .l4 { background: linear-gradient(90deg, #43e97b, #38f9d7); }
+  .l5 { background: linear-gradient(90deg, #fa709a, #fee140); }
+  .l6 { background: linear-gradient(90deg, #ff6a00, #ee0979); }
+  .arrow { text-align: center; color: #e94560; font-size: 1.4em; }
+
+  /* Metrics */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+  }
+  .metric {
+    background: rgba(233, 69, 96, 0.1);
+    border: 2px solid #e94560;
+    border-radius: 10px;
+    padding: 18px;
+    text-align: center;
+  }
+  .metric-val {
+    display: block;
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #e94560;
+  }
+  .metric-label { color: #c0c0d8; font-size: 0.88em; margin-top: 4px; }
+
+  footer {
+    text-align: center;
+    color: #8080a0;
+    padding: 20px;
+    font-size: 0.85em;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>Shakespeare <span class="accent">Text Generation</span></h1>
+    <p class="subtitle">Methods, Tools &amp; Processes — LSTM-based Language Model</p>
+  </header>
+
+  <section class="section">
+    <h2>1. Data Pipeline</h2>
+    <div class="pipeline">
+      <div class="step">
+        <span class="step-num">1</span>
+        <h3>Acquire Corpus</h3>
+        <p>Download Shakespeare's sonnets via HTTP; split into lines after lowercasing.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <h3>Tokenize</h3>
+        <p>Map each unique word to an integer index using Keras Tokenizer.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <h3>N-gram Sequences</h3>
+        <p>Generate progressively longer prefixes of each line for next-word prediction.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <h3>Pre-padding</h3>
+        <p>Pad sequences with zeros on the left so every input shares the same length.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">5</span>
+        <h3>Split X / y</h3>
+        <p>Predictors = all tokens but last; Label = the final token.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">6</span>
+        <h3>One-Hot Encode</h3>
+        <p>Convert integer labels to vocabulary-sized vectors for softmax output.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>2. Model Architecture</h2>
+    <div class="architecture">
+      <div class="layer l1">
+        <span>Embedding (100-dim)</span>
+        <span class="desc">word id &rarr; dense vector</span>
+      </div>
+      <div class="arrow">&darr;</div>
+      <div class="layer l2">
+        <span>Bidirectional LSTM (150)</span>
+        <span class="desc">past + future context</span>
+      </div>
+      <div class="arrow">&darr;</div>
+      <div class="layer l3">
+        <span>Dropout (0.2)</span>
+        <span class="desc">anti-overfit</span>
+      </div>
+      <div class="arrow">&darr;</div>
+      <div class="layer l4">
+        <span>LSTM (100)</span>
+        <span class="desc">sequence &rarr; context vector</span>
+      </div>
+      <div class="arrow">&darr;</div>
+      <div class="layer l5">
+        <span>Dense + ReLU + L2</span>
+        <span class="desc">hidden representation</span>
+      </div>
+      <div class="arrow">&darr;</div>
+      <div class="layer l6">
+        <span>Dense + Softmax</span>
+        <span class="desc">probability over vocab</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>3. Tools &amp; Libraries</h2>
+    <div class="tools">
+      <div class="tool-card">
+        <h3>TensorFlow / Keras</h3>
+        <code>Sequential, Embedding, LSTM</code>
+        <p>Deep learning framework providing layers, training loop, and model persistence.</p>
+      </div>
+      <div class="tool-card">
+        <h3>Keras Tokenizer</h3>
+        <code>fit_on_texts, texts_to_sequences</code>
+        <p>Builds vocabulary and converts text to integer sequences.</p>
+      </div>
+      <div class="tool-card">
+        <h3>pad_sequences</h3>
+        <code>padding='pre'</code>
+        <p>Left-pads variable-length sequences with zeros for batch training.</p>
+      </div>
+      <div class="tool-card">
+        <h3>NumPy</h3>
+        <code>np.array, np.argmax</code>
+        <p>Array math and greedy next-word selection during generation.</p>
+      </div>
+      <div class="tool-card">
+        <h3>Adam Optimizer</h3>
+        <code>optimizer=Adam()</code>
+        <p>Adaptive gradient method for efficient convergence on NLP tasks.</p>
+      </div>
+      <div class="tool-card">
+        <h3>Categorical Crossentropy</h3>
+        <code>loss='categorical_crossentropy'</code>
+        <p>Standard loss for multi-class classification with one-hot labels.</p>
+      </div>
+      <div class="tool-card">
+        <h3>L2 Regularization</h3>
+        <code>regularizers.l2(0.01)</code>
+        <p>Penalizes large weights to combat overfitting on a small corpus.</p>
+      </div>
+      <div class="tool-card">
+        <h3>Matplotlib</h3>
+        <code>plt.plot, plt.subplots</code>
+        <p>Plots per-epoch accuracy and loss curves for diagnostic analysis.</p>
+      </div>
+      <div class="tool-card">
+        <h3>Model Persistence</h3>
+        <code>model.save / load_model</code>
+        <p>Caches trained weights to <em>.keras</em> format to skip retraining.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>4. Training &amp; Generation Processes</h2>
+    <div class="pipeline">
+      <div class="step">
+        <span class="step-num">A</span>
+        <h3>Compile</h3>
+        <p>Wire up loss, optimizer, and accuracy metric before training.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">B</span>
+        <h3>Fit (50 epochs)</h3>
+        <p>Backpropagation updates weights; history dict captures metrics.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">C</span>
+        <h3>Persist</h3>
+        <p>Save model + pickled history so reruns load instantly.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">D</span>
+        <h3>Visualize</h3>
+        <p>Plot accuracy up / loss down as convergence signals.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">E</span>
+        <h3>Autoregressive Loop</h3>
+        <p>Tokenize &rarr; pad &rarr; predict &rarr; argmax &rarr; append &rarr; repeat.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">F</span>
+        <h3>Reverse Lookup</h3>
+        <p>Invert word_index to map predicted id back to a readable word.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>5. Key Hyperparameters</h2>
+    <div class="metrics">
+      <div class="metric">
+        <span class="metric-val">100</span>
+        <span class="metric-label">Embedding dims</span>
+      </div>
+      <div class="metric">
+        <span class="metric-val">150</span>
+        <span class="metric-label">Bi-LSTM units</span>
+      </div>
+      <div class="metric">
+        <span class="metric-val">100</span>
+        <span class="metric-label">LSTM units</span>
+      </div>
+      <div class="metric">
+        <span class="metric-val">0.2</span>
+        <span class="metric-label">Dropout</span>
+      </div>
+      <div class="metric">
+        <span class="metric-val">0.01</span>
+        <span class="metric-label">L2 &lambda;</span>
+      </div>
+      <div class="metric">
+        <span class="metric-val">50</span>
+        <span class="metric-label">Epochs</span>
+      </div>
+      <div class="metric">
+        <span class="metric-val">~40%</span>
+        <span class="metric-label">Target accuracy</span>
+      </div>
+      <div class="metric">
+        <span class="metric-val">Adam</span>
+        <span class="metric-label">Optimizer</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Lab: Text Generation from Shakespeare's Sonnets &middot; LSTM-based NLP pipeline
+  </footer>
+
+</div>
+</body>
+</html>
